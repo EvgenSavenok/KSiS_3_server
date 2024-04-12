@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KSiS_3")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8e604c0ee43aa34c78ef0657a724d8b8f30c8b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("KSiS_3")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KSiS_3")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

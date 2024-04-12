@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vQR5jA7zbkd2/z9SjBNOFoXftBTleaaLBtpkypI/7XBGcEQxg+yYE0qX4fop/yMUq+68xRq6u8651J9cZHyiNQ==",
+  "dgSpecHash": "sn7gSAS+VJnWdsHKTNAQjkEkBvj1YN9QRQb9RYKVB2C9jv4skLjtvpll/ZLcrFQPxFoP3i/RQt14nVA+ODJTgw==",
   "success": true,
   "projectFilePath": "C:\\Users\\eugen\\RiderProjects\\KSiS_3\\KSiS_3.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,7 @@
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.extensions.options\\2.2.0\\microsoft.extensions.options.2.2.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.net.http.headers\\2.2.0\\microsoft.net.http.headers.2.2.0.nupkg.sha512",
+    "C:\\Users\\eugen\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\system.componentmodel.annotations\\4.5.0\\system.componentmodel.annotations.4.5.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\system.memory\\4.5.1\\system.memory.4.5.1.nupkg.sha512",

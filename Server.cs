@@ -5,13 +5,127 @@ namespace KSiS_3;
 
 public class Server
 {
-    private static string dir = Path.GetFullPath("filesstorage") + "\\";
+    private static string _dir = Path.GetFullPath("filesStorage") + "\\";
     private static int _status = 200;
-    private static byte[] response;
+    private static byte[] _byteResponse;
 
-    private void DoGet(string filename)
+    private void HadleGet(string filename)
     {
-        response = File.ReadAllBytes(Path.Combine(dir, filename));
+        _byteResponse = File.ReadAllBytes(Path.Combine(_dir, filename));
+    }
+    
+    private void HandlePost(HttpListenerRequest request, string filename)
+    {
+        using (Stream body = request.InputStream)
+        {
+            using (StreamReader reader = new StreamReader(body, request.ContentEncoding))
+            {
+                string content = reader.ReadToEnd();
+                File.AppendAllText(Path.Combine(_dir, filename), content);
+                _byteResponse = Encoding.UTF8.GetBytes("");
+            }
+        }
+    }
+    
+    private void HandlePut(HttpListenerRequest request, string filename)
+    {
+        using (Stream body = request.InputStream)
+        {
+            using (StreamReader reader = new StreamReader(body, request.ContentEncoding))
+            {
+                string content = reader.ReadToEnd();
+                File.WriteAllText(Path.Combine(_dir, filename), content);
+                _byteResponse = Encoding.UTF8.GetBytes("");
+            }
+        }
+    }
+    
+    private void HandleDelete(string filename)
+    {
+        File.Delete(Path.Combine(_dir, filename));
+        _byteResponse = Encoding.UTF8.GetBytes("");
+    }
+
+    private string findParam(string postData, string param)
+    {
+        string[] pairs = postData.Split('&');
+        foreach (string pair in pairs)
+        {
+            string[] keyValue = pair.Split('=');
+            if (keyValue.Length == 2)
+            {
+                string key = keyValue[0];
+                string value = keyValue[1];
+                if (key == param)
+                    return Uri.UnescapeDataString(value); 
+            }
+        }
+        return null;
+    }
+    private void HandleCopy(HttpListenerRequest request, string filename)
+    {
+        string postData = "";
+        using (StreamReader reader = new StreamReader(request.InputStream))
+        {
+            postData = reader.ReadToEnd();
+        }
+        string newPath = findParam(postData, "newPath");
+        if (!Directory.Exists(newPath))
+            Directory.CreateDirectory(newPath);
+        string newFileName = findParam(postData, "newFileName");
+        string newFullPath = Path.Combine(newPath, newFileName);
+        File.Copy(Path.Combine(_dir, filename), newFullPath);
+        _byteResponse = Encoding.UTF8.GetBytes("");
+    }
+    
+    private void HandleMove(HttpListenerRequest request, string filename)
+    {
+        string postData = "";
+        using (StreamReader reader = new StreamReader(request.InputStream))
+        {
+            postData = reader.ReadToEnd();
+        }
+        string newPath = findParam(postData, "newPath");
+        if (!Directory.Exists(newPath))
+            Directory.CreateDirectory(newPath);
+        string newFullPath = Path.Combine(newPath, filename);
+        File.Move(Path.Combine(_dir, filename), newFullPath);
+        _byteResponse = Encoding.UTF8.GetBytes("");
+    }
+    
+    private void SendResponse(HttpListenerResponse response)
+    {
+        response.StatusCode = _status;
+        response.OutputStream.Write(_byteResponse, 0, _byteResponse.Length);
+        response.Close();
+    }
+
+    private void DetermineHttpMethod(string requestType, string filename, HttpListenerRequest request)
+    {
+        switch (requestType)
+        {
+            case "GET":
+                HadleGet(filename);
+                break;
+            case "POST":
+                HandlePost(request, filename);
+                break;
+            case "PUT":
+                HandlePut(request, filename);
+                break;
+             case "DELETE":
+                 HandleDelete(filename);
+                 break;
+            case "COPY":
+                HandleCopy(request, filename);
+                break; 
+            case "MOVE": 
+                HandleMove(request, filename);
+                break;
+            default:
+                _status = 405;
+                break;
+        }
     }
     private void HandleRequest(object state)
     {
@@ -24,30 +138,8 @@ public class Server
         string filename = Path.GetFileName(requestUrl);
         try
         {
-            switch (requestType)
-            {
-                case "GET":
-                    DoGet(filename);
-                    break;
-                // case "POST":
-                //     DoPost(request, filename);
-                //     break;
-                // case "PUT":
-                //     DoPut(request, filename);
-                //     break;
-                // case "DELETE":
-                //     DoDelete(filename);
-                //     break;
-                // case "MOVE":
-                //     DoMove(request, filename);
-                //     break;
-                // case "COPY":
-                //     DoCopy(request, filename);
-                //     break;
-                default:
-                    _status = 405;
-                    break;
-            }
+            DetermineHttpMethod(requestType, filename, request);
+            SendResponse(response);
         }
         catch (FileNotFoundException)
         {
@@ -57,15 +149,12 @@ public class Server
         {
             _status = 400;
         }
-        response.StatusCode = _status;
-        response.OutputStream.Write(Server.response, 0, Server.response.Length);
-        response.Close();
     }
     public void CreateHttpListener()
     {
         Console.OutputEncoding = Encoding.UTF8;
         HttpListener listener = new();
-        bool isIncorrect;
+        bool isIncorrect = false;
         do
         {
             try
@@ -95,73 +184,13 @@ public class Server
             }
             finally
             {
-                listener.Stop();
-                listener.Close();
+                if (!isIncorrect)
+                {
+                    listener.Stop();
+                    listener.Close();
+                }
             }
         } 
         while (isIncorrect);
     }
-    
-   
-    
-    //
-    // static void DoPost(HttpListenerRequest request, string filename)
-    // {
-    //     using (Stream body = request.InputStream)
-    //     {
-    //         using (StreamReader reader = new StreamReader(body, request.ContentEncoding))
-    //         {
-    //             string content = reader.ReadToEnd();
-    //             File.AppendAllText(Path.Combine(dir, filename), content);
-    //         }
-    //     }
-    // }
-    //
-    // static void DoPut(HttpListenerRequest request, string filename)
-    // {
-    //     using (Stream body = request.InputStream)
-    //     {
-    //         using (StreamReader reader = new StreamReader(body, request.ContentEncoding))
-    //         {
-    //             string content = reader.ReadToEnd();
-    //             File.WriteAllText(Path.Combine(dir, filename), content);
-    //         }
-    //     }
-    // }
-    //
-    // static void DoDelete(string filename)
-    // {
-    //     File.Delete(Path.Combine(dir, filename));
-    // }
-    //
-    // static void DoMove(HttpListenerRequest request, string filename)
-    // {
-    //     string newPath = request.QueryString.Get("newPath");
-    //     if (newPath == null)
-    //     {
-    //         throw new IOException("New path not provided");
-    //     }
-    //     string newFilename = Path.Combine(newPath, filename);
-    //     if (File.Exists(newFilename))
-    //     {
-    //         throw new IOException("File with new name already exists");
-    //     }
-    //     File.Move(Path.Combine(dir, filename), newFilename);
-    // }
-    //
-    // static void DoCopy(HttpListenerRequest request, string filename)
-    // {
-    //     string newPath = request.QueryString.Get("newPath");
-    //     string newFilename = request.QueryString.Get("newFilename");
-    //     if (newPath == null || newFilename == null)
-    //     {
-    //         throw new IOException("New path or new filename not provided");
-    //     }
-    //     string destination = Path.Combine(newPath, newFilename);
-    //     if (File.Exists(destination))
-    //     {
-    //         throw new IOException("File with new name already exists");
-    //     }
-    //     File.Copy(Path.Combine(dir, filename), destination);
-    // }
 }

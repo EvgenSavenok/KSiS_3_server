@@ -12,3 +12,7 @@ C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\refint\KSiS_3.dll
 C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\KSiS_3.pdb
 C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\KSiS_3.genruntimeconfig.cache
 C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\ref\KSiS_3.dll
+C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\KSiS_3.sourcelink.json
+C:\Users\eugen\RiderProjects\KSiS_3\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\KSiS_3.csproj.AssemblyReference.cache
+C:\Users\eugen\RiderProjects\KSiS_3\obj\Debug\net8.0\KSiS_3.csproj.Up2Date
